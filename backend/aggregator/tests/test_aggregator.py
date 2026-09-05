@@ -301,7 +301,7 @@ class TestProcessLibrary:
         sponsors_resp.json.return_value = {"data": {"repositoryOwner": {"sponsorsListing": None}}}
 
         get_responses = iter([scorecard_resp, commits_resp, commits_empty, oc_resp])
-        post_responses = iter([sponsors_resp, osv_resp])
+        post_responses = iter([osv_resp, sponsors_resp])
 
         with patch("aggregator.requests.get", side_effect=get_responses), \
              patch("aggregator.requests.post", side_effect=post_responses):
@@ -328,7 +328,7 @@ class TestProcessLibrary:
         oc_resp = MagicMock(status_code=404)
 
         get_responses = iter([scorecard_resp, commits_resp, oc_resp])
-        post_responses = iter([sponsors_resp, osv_resp])
+        post_responses = iter([osv_resp, sponsors_resp])
 
         with patch("aggregator.requests.get", side_effect=get_responses), \
              patch("aggregator.requests.post", side_effect=post_responses):
