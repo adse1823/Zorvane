@@ -307,6 +307,16 @@
     libtiff:         'TIFF codec',
   };
 
+  // One example CVE per library for demo use. FreeType's is real (March 2025).
+  const EXAMPLE_CVES = {
+    freetype:        'CVE-2025-27363',
+    libpng:          'CVE-2025-04612',
+    lcms2:           'CVE-2024-09187',
+    ghostscript:     'CVE-2024-29510',
+    'libjpeg-turbo': 'CVE-2025-03441',
+    libtiff:         'CVE-2025-07823',
+  };
+
   const EDITORS = {
     freetype:        ['PS', 'GIMP', 'Krita'],
     libpng:          ['GIMP', 'Krita'],
@@ -552,6 +562,7 @@
             <input type="text" id="pg-cve-input-${key}" placeholder="CVE-YYYY-XXXXX"
                    onkeydown="if(event.key==='Enter')addCve('${key}')">
             <button class="cve-add-btn" onclick="addCve('${key}')">Add</button>
+            ${EXAMPLE_CVES[key] ? `<button class="cve-add-btn" style="background:#fff8e1;border-color:#ffe082;color:#7c5400" onclick="addExampleCve('${key}')" title="Add ${EXAMPLE_CVES[key]}">+ Example</button>` : ''}
           </div>
         </div>
 
@@ -618,6 +629,17 @@
     }
     input.value = '';
     input.focus();
+  }
+
+  function addExampleCve(key) {
+    const cve = EXAMPLE_CVES[key];
+    if (!cve) return;
+    const lib = playgroundData.libraries[key];
+    if (!lib.open_cves.includes(cve)) {
+      lib.open_cves.push(cve);
+      refreshCveTags(key);
+      recomputeRisk(key);
+    }
   }
 
   function removeCve(key, cve) {
