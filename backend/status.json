@@ -1,0 +1,6 @@
+{
+  "last_updated": null,
+  "krita_libs": ["freetype", "lcms2", "libjpeg-turbo", "libpng"],
+  "gimp_libs": ["freetype", "ghostscript", "lcms2", "libjpeg-turbo", "libpng", "libtiff"],
+  "libraries": {}
+}

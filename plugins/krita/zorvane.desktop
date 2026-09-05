@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Krita/PythonPlugin
+X-KDE-Library=zorvane
+Name=Zorvane Library Monitor
+Comment=Alerts when open-source libraries bundled by Krita have known security or maintainer risk
