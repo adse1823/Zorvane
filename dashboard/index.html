@@ -185,11 +185,11 @@
       padding: 2px 7px;
       border-radius: 4px;
       font-weight: 600;
-      background: #ddf4ff;
-      color: #0969da;
-      border: 1px solid #b6e3ff;
+      border: 1px solid transparent;
     }
-    .editor-pill.ps { background: #ffd7f5; color: #8250df; border-color: #d8b4fe; }
+    .editor-pill.ps    { background: #ffd7f5; color: #8250df; border-color: #d8b4fe; }
+    .editor-pill.gimp  { background: #fff3cd; color: #92400e; border-color: #fcd34d; }
+    .editor-pill.krita { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
 
     /* ── Links ───────────────────────────────────────────────────── */
     a { color: var(--accent); text-decoration: none; }
@@ -280,9 +280,12 @@
     return ['', 'Single contributor', '2 contributors', '3–5 contributors', '5+ contributors'][tier] || '—';
   }
 
+  const EDITOR_CLASS = { PS: 'ps', GIMP: 'gimp', Krita: 'krita' };
+  const EDITOR_LABEL = { PS: 'Photoshop', GIMP: 'GIMP', Krita: 'Krita' };
+
   function renderEditorPills(key) {
     return (EDITORS[key] || []).map(e =>
-      `<span class="editor-pill${e==='PS'?' ps':''}">${e==='PS'?'Photoshop':e}</span>`
+      `<span class="editor-pill ${EDITOR_CLASS[e] || ''}">${EDITOR_LABEL[e] || e}</span>`
     ).join('');
   }
 
