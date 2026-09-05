@@ -209,25 +209,34 @@ class TestFetchCves:
 # ---------------------------------------------------------------------------
 
 class TestFetchFundingOpencollective:
+    # Now uses GraphQL POST, not GET
+
     def test_returns_url_when_collective_exists(self):
         mock_resp = MagicMock()
         mock_resp.status_code = 200
-        mock_resp.json.return_value = {"id": 12345, "slug": "freetype"}
-        with patch("aggregator.requests.get", return_value=mock_resp):
+        mock_resp.json.return_value = {"data": {"collective": {"id": 12345}}}
+        with patch("aggregator.requests.post", return_value=mock_resp):
             url = fetch_funding_opencollective("freetype")
         assert url == "https://opencollective.com/freetype"
 
     def test_returns_none_when_slug_is_none(self):
         assert fetch_funding_opencollective(None) is None
 
-    def test_returns_none_on_404(self):
+    def test_returns_none_when_collective_missing(self):
         mock_resp = MagicMock()
-        mock_resp.status_code = 404
-        with patch("aggregator.requests.get", return_value=mock_resp):
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = {"data": {"collective": None}}
+        with patch("aggregator.requests.post", return_value=mock_resp):
+            assert fetch_funding_opencollective("nonexistent") is None
+
+    def test_returns_none_on_http_error(self):
+        mock_resp = MagicMock()
+        mock_resp.status_code = 500
+        with patch("aggregator.requests.post", return_value=mock_resp):
             assert fetch_funding_opencollective("nonexistent") is None
 
     def test_returns_none_on_network_error(self):
-        with patch("aggregator.requests.get", side_effect=Exception("timeout")):
+        with patch("aggregator.requests.post", side_effect=Exception("timeout")):
             assert fetch_funding_opencollective("freetype") is None
 
 
@@ -275,6 +284,31 @@ class TestFetchBusFactorGithub:
 # ---------------------------------------------------------------------------
 
 class TestProcessLibrary:
+    """
+    Integration smoke tests. Uses URL-based mock dispatch so tests stay valid
+    regardless of how many OSV packages each library has.
+    """
+
+    def _make_get_mock(self, scorecard_resp, commits_resp, commits_empty_resp):
+        commit_calls = [0]
+        def mock_get(url, **kwargs):
+            if "scorecard.dev" in url:
+                return scorecard_resp
+            else:  # commits endpoint
+                commit_calls[0] += 1
+                return commits_resp if commit_calls[0] == 1 else commits_empty_resp
+        return mock_get
+
+    def _make_post_mock(self, osv_resp, sponsors_resp, oc_resp):
+        def mock_post(url, **kwargs):
+            if "osv.dev" in url:
+                return osv_resp
+            elif "opencollective.com" in url:
+                return oc_resp
+            else:  # GitHub GraphQL (sponsors)
+                return sponsors_resp
+        return mock_post
+
     def test_output_matches_schema(self):
         recent = (datetime.now(timezone.utc) - timedelta(days=10)).strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -282,12 +316,10 @@ class TestProcessLibrary:
         scorecard_resp.json.return_value = {"score": 4.5}
 
         commits_resp = MagicMock(status_code=200)
-        commits_resp.json.return_value = [
-            {"author": {"login": "alice"}, "commit": {"author": {"name": "Alice"}}}
-        ] * 80 + [
-            {"author": {"login": "bob"}, "commit": {"author": {"name": "Bob"}}}
-        ] * 20
-
+        commits_resp.json.return_value = (
+            [{"author": {"login": "alice"}, "commit": {"author": {"name": "Alice"}}}] * 80
+            + [{"author": {"login": "bob"}, "commit": {"author": {"name": "Bob"}}}] * 20
+        )
         commits_empty = MagicMock(status_code=200)
         commits_empty.json.return_value = []
 
@@ -295,22 +327,20 @@ class TestProcessLibrary:
         osv_resp.json.return_value = {
             "vulns": [{"id": "CVE-2025-27363", "published": recent, "aliases": []}]
         }
-
-        oc_resp = MagicMock(status_code=404)
         sponsors_resp = MagicMock(status_code=200)
         sponsors_resp.json.return_value = {"data": {"repositoryOwner": {"sponsorsListing": None}}}
+        oc_resp = MagicMock(status_code=200)
+        oc_resp.json.return_value = {"data": {"collective": None}}
 
-        get_responses = iter([scorecard_resp, commits_resp, commits_empty, oc_resp])
-        post_responses = iter([osv_resp, sponsors_resp])
-
-        with patch("aggregator.requests.get", side_effect=get_responses), \
-             patch("aggregator.requests.post", side_effect=post_responses):
+        with patch("aggregator.requests.get", side_effect=self._make_get_mock(scorecard_resp, commits_resp, commits_empty)), \
+             patch("aggregator.requests.post", side_effect=self._make_post_mock(osv_resp, sponsors_resp, oc_resp)):
             result = process_library("freetype", LIBRARIES["freetype"])
 
         assert result["name"] == "FreeType"
         assert isinstance(result["scorecard"], float)
         assert result["bus_factor_tier"] in (1, 2, 3, 4)
         assert isinstance(result["open_cves"], list)
+        assert "CVE-2025-27363" in result["open_cves"]
         assert result["risk"] in ("low", "medium", "high", "unknown")
         assert "funding_url" in result
         assert result["criticality"] is None  # Phase 2
@@ -321,17 +351,17 @@ class TestProcessLibrary:
 
         commits_resp = MagicMock(status_code=200)
         commits_resp.json.return_value = []
+        commits_empty = MagicMock(status_code=200)
+        commits_empty.json.return_value = []
 
         osv_resp = MagicMock(status_code=503)
         sponsors_resp = MagicMock(status_code=200)
         sponsors_resp.json.return_value = {"data": {"repositoryOwner": None}}
-        oc_resp = MagicMock(status_code=404)
+        oc_resp = MagicMock(status_code=200)
+        oc_resp.json.return_value = {"data": {"collective": None}}
 
-        get_responses = iter([scorecard_resp, commits_resp, oc_resp])
-        post_responses = iter([osv_resp, sponsors_resp])
-
-        with patch("aggregator.requests.get", side_effect=get_responses), \
-             patch("aggregator.requests.post", side_effect=post_responses):
+        with patch("aggregator.requests.get", side_effect=self._make_get_mock(scorecard_resp, commits_resp, commits_empty)), \
+             patch("aggregator.requests.post", side_effect=self._make_post_mock(osv_resp, sponsors_resp, oc_resp)):
             result = process_library("freetype", LIBRARIES["freetype"])
 
         assert result.get("data_stale") is True

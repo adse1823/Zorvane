@@ -29,120 +29,95 @@
       min-height: 100vh;
     }
 
-    /* ── Header ─────────────────────────────────────────────────── */
+    /* ── Header ──────────────────────────────────────────────────── */
     header {
       background: var(--header);
       color: #fff;
       padding: 40px 32px 36px;
     }
-    header h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
+    header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; }
     header h1 span { color: #58a6ff; }
-    header p {
-      margin-top: 6px;
-      font-size: 0.95rem;
+    header p { margin-top: 6px; font-size: 0.95rem; color: #8b949e; max-width: 560px; }
+    .updated { margin-top: 12px; font-size: 0.8rem; color: #484f58; }
+
+    /* ── Tab bar ─────────────────────────────────────────────────── */
+    .tab-bar {
+      background: var(--header);
+      border-bottom: 1px solid #21262d;
+      display: flex;
+      padding: 0 32px;
+      gap: 4px;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
       color: #8b949e;
-      max-width: 560px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 500;
+      padding: 10px 16px;
+      transition: color 0.15s, border-color 0.15s;
     }
-    .updated {
-      margin-top: 12px;
-      font-size: 0.8rem;
-      color: #484f58;
+    .tab-btn:hover { color: #c9d1d9; }
+    .tab-btn.active { color: #fff; border-bottom-color: #58a6ff; }
+
+    /* ── Demo mode banner ────────────────────────────────────────── */
+    .demo-banner {
+      background: #fff8e1;
+      border-bottom: 1px solid #ffe082;
+      color: #7c5400;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 32px;
+      font-size: 0.88rem;
+      font-weight: 500;
     }
+    .demo-banner button {
+      background: none;
+      border: 1px solid #f9a825;
+      border-radius: 4px;
+      color: #7c5400;
+      cursor: pointer;
+      font-size: 0.82rem;
+      padding: 3px 10px;
+    }
+    .demo-banner button:hover { background: #fff3e0; }
 
     /* ── Layout ──────────────────────────────────────────────────── */
     main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
 
     /* ── Summary cards ───────────────────────────────────────────── */
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 14px;
-      margin-bottom: 28px;
-    }
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px 20px;
-      text-align: center;
-    }
-    .card .number {
-      font-size: 2rem;
-      font-weight: 700;
-      line-height: 1;
-    }
-    .card .label {
-      margin-top: 4px;
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--muted);
-    }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 28px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; text-align: center; }
+    .card .number { font-size: 2rem; font-weight: 700; line-height: 1; }
+    .card .label { margin-top: 4px; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
     .card.high   .number { color: var(--high); }
     .card.medium .number { color: var(--medium); }
     .card.low    .number { color: var(--low); }
 
-    /* ── Editor alert banners ────────────────────────────────────── */
+    /* ── Editor banners ──────────────────────────────────────────── */
     .banners { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
-    .banner {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--border);
-      border-radius: var(--radius);
-      padding: 12px 16px;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .banner { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--border); border-radius: var(--radius); padding: 12px 16px; font-size: 0.9rem; display: flex; align-items: center; gap: 10px; }
     .banner.alert-high   { border-left-color: var(--high); }
     .banner.alert-medium { border-left-color: var(--medium); }
     .banner.alert-ok     { border-left-color: var(--low); }
     .banner .editor-name { font-weight: 600; min-width: 80px; }
-    .banner .detail      { color: var(--muted); font-size: 0.85rem; }
 
     /* ── Table ───────────────────────────────────────────────────── */
-    .table-wrap {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
+    .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
     table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-    thead th {
-      background: #f6f8fa;
-      padding: 10px 14px;
-      text-align: left;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--muted);
-      border-bottom: 1px solid var(--border);
-      white-space: nowrap;
-    }
+    thead th { background: #f6f8fa; padding: 10px 14px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
     tbody tr { border-bottom: 1px solid var(--border); }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: #f6f8fa; }
     td { padding: 12px 14px; vertical-align: middle; }
-
     .lib-name { font-weight: 600; font-size: 0.92rem; }
     .lib-role { color: var(--muted); font-size: 0.8rem; margin-top: 1px; }
 
     /* ── Risk badge ──────────────────────────────────────────────── */
-    .badge {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      text-transform: uppercase;
-      color: #fff;
-    }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.3px; text-transform: uppercase; color: #fff; }
     .badge-high    { background: var(--high); }
     .badge-medium  { background: var(--medium); }
     .badge-low     { background: var(--low); }
@@ -150,67 +125,129 @@
 
     /* ── Scorecard bar ───────────────────────────────────────────── */
     .score-wrap { display: flex; align-items: center; gap: 8px; }
-    .score-bar  {
-      flex: 1; height: 6px; border-radius: 3px;
-      background: var(--border); max-width: 80px; overflow: hidden;
-    }
+    .score-bar  { flex: 1; height: 6px; border-radius: 3px; background: var(--border); max-width: 80px; overflow: hidden; }
     .score-fill { height: 100%; border-radius: 3px; }
     .score-val  { font-size: 0.82rem; font-weight: 600; min-width: 28px; }
 
     /* ── Bus factor ──────────────────────────────────────────────── */
     .bus-dots { display: flex; gap: 4px; }
-    .dot {
-      width: 10px; height: 10px; border-radius: 50%;
-      background: var(--border);
-    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); }
     .dot.filled { background: var(--accent); }
     .dot.danger { background: var(--high); }
 
     /* ── CVEs ────────────────────────────────────────────────────── */
     .cve-list { display: flex; flex-wrap: wrap; gap: 4px; }
-    .cve-tag {
-      background: #fff0f0;
-      color: var(--high);
-      border: 1px solid #f5c6cb;
-      border-radius: 4px;
-      font-size: 0.72rem;
-      padding: 1px 6px;
-      font-family: "SFMono-Regular", Consolas, monospace;
-    }
+    .cve-tag { background: #fff0f0; color: var(--high); border: 1px solid #f5c6cb; border-radius: 4px; font-size: 0.72rem; padding: 1px 6px; font-family: "SFMono-Regular", Consolas, monospace; }
 
     /* ── Editor pills ────────────────────────────────────────────── */
     .editor-pills { display: flex; flex-wrap: wrap; gap: 4px; }
-    .editor-pill {
-      font-size: 0.7rem;
-      padding: 2px 7px;
-      border-radius: 4px;
-      font-weight: 600;
-      border: 1px solid transparent;
-    }
+    .editor-pill { font-size: 0.7rem; padding: 2px 7px; border-radius: 4px; font-weight: 600; border: 1px solid transparent; }
     .editor-pill.ps    { background: #ffd7f5; color: #8250df; border-color: #d8b4fe; }
     .editor-pill.gimp  { background: #fff3cd; color: #92400e; border-color: #fcd34d; }
     .editor-pill.krita { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
 
-    /* ── Links ───────────────────────────────────────────────────── */
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
+    .state-msg { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 0.95rem; }
 
-    /* ── Loading / error ─────────────────────────────────────────── */
-    .state-msg {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--muted);
-      font-size: 0.95rem;
+    /* ── Playground ──────────────────────────────────────────────── */
+    .pg-intro { margin-bottom: 24px; }
+    .pg-intro h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
+    .pg-intro p { color: var(--muted); font-size: 0.9rem; margin-bottom: 16px; }
+    .pg-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-primary { background: var(--accent); color: #fff; border: none; border-radius: var(--radius); cursor: pointer; font-size: 0.88rem; font-weight: 600; padding: 9px 18px; }
+    .btn-primary:hover { background: #1a7ae8; }
+    .btn-secondary { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); cursor: pointer; font-size: 0.88rem; padding: 9px 18px; }
+    .btn-secondary:hover { background: #f6f8fa; }
+
+    .pg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+
+    .pg-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
     }
+    .pg-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+    .pg-card-header h3 { font-size: 1rem; font-weight: 700; }
+    .pg-card-header .lib-role { color: var(--muted); font-size: 0.78rem; margin-top: 2px; }
+
+    .pg-field { margin-bottom: 14px; }
+    .pg-field label.field-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    /* Scorecard slider */
+    .slider-row { display: flex; align-items: center; gap: 10px; }
+    .slider-row input[type=range] { flex: 1; accent-color: var(--accent); cursor: pointer; }
+    .slider-val { font-size: 0.88rem; font-weight: 700; min-width: 36px; }
+    .na-check { display: flex; align-items: center; gap: 5px; font-size: 0.78rem; color: var(--muted); cursor: pointer; }
+    .na-check input { cursor: pointer; }
+
+    /* Bus factor tier buttons */
+    .tier-row { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tier-btn {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      cursor: pointer;
+      font-size: 0.75rem;
+      padding: 5px 10px;
+      color: var(--muted);
+      transition: all 0.1s;
+    }
+    .tier-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .tier-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    .tier-btn.active.danger { background: var(--high); border-color: var(--high); }
+    .tier-btn.na { font-style: italic; }
+
+    /* CVE input */
+    .cve-tag-row { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; min-height: 22px; }
+    .cve-tag-pg {
+      background: #fff0f0; color: var(--high); border: 1px solid #f5c6cb;
+      border-radius: 4px; font-size: 0.72rem; padding: 2px 6px;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .cve-tag-pg button { background: none; border: none; color: var(--high); cursor: pointer; font-size: 0.8rem; padding: 0; line-height: 1; }
+    .cve-input-row { display: flex; gap: 6px; }
+    .cve-input-row input {
+      flex: 1; border: 1px solid var(--border); border-radius: 4px;
+      font-size: 0.78rem; font-family: "SFMono-Regular", Consolas, monospace;
+      padding: 4px 8px; outline: none;
+    }
+    .cve-input-row input:focus { border-color: var(--accent); }
+    .cve-add-btn { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; cursor: pointer; font-size: 0.78rem; padding: 4px 10px; }
+    .cve-add-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Funding toggle */
+    .toggle-row { display: flex; align-items: center; gap: 10px; }
+    .toggle-switch { position: relative; width: 36px; height: 20px; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-track {
+      position: absolute; inset: 0; background: var(--border); border-radius: 20px; cursor: pointer; transition: background 0.2s;
+    }
+    .toggle-track::after {
+      content: ''; position: absolute; left: 3px; top: 3px;
+      width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: transform 0.2s;
+    }
+    .toggle-switch input:checked + .toggle-track { background: var(--low); }
+    .toggle-switch input:checked + .toggle-track::after { transform: translateX(16px); }
+    .toggle-label { font-size: 0.82rem; color: var(--muted); }
 
     /* ── Footer ──────────────────────────────────────────────────── */
-    footer {
-      text-align: center;
-      padding: 24px;
-      font-size: 0.78rem;
-      color: var(--muted);
-      border-top: 1px solid var(--border);
-    }
+    footer { text-align: center; padding: 24px; font-size: 0.78rem; color: var(--muted); border-top: 1px solid var(--border); }
     footer a { color: var(--muted); }
   </style>
 </head>
@@ -222,8 +259,30 @@
   <div class="updated" id="updated">Loading data…</div>
 </header>
 
-<main>
+<div class="tab-bar">
+  <button class="tab-btn active" id="btn-dashboard" onclick="showTab('dashboard')">Dashboard</button>
+  <button class="tab-btn" id="btn-playground" onclick="showTab('playground')">Playground</button>
+</div>
+
+<div id="demo-banner" class="demo-banner" style="display:none">
+  ⚠ Showing playground data — this is not live.
+  <button onclick="resetToLive()">Reset to live data</button>
+</div>
+
+<main id="tab-dashboard">
   <div id="app"><div class="state-msg">Fetching library data…</div></div>
+</main>
+
+<main id="tab-playground" style="display:none">
+  <div class="pg-intro">
+    <h2>Signal Playground</h2>
+    <p>Edit any library's signals — Scorecard score, bus factor, CVEs, funding. Risk levels recalculate instantly using the same rules as the aggregator. Hit <strong>Apply to Dashboard</strong> to see the full impact.</p>
+    <div class="pg-actions">
+      <button class="btn-primary" onclick="applyToDashboard()">Apply to Dashboard →</button>
+      <button class="btn-secondary" onclick="resetToLive()">Reset to live data</button>
+    </div>
+  </div>
+  <div class="pg-grid" id="pg-grid"><div class="state-msg">Load the dashboard first.</div></div>
 </main>
 
 <footer>
@@ -240,15 +299,14 @@
   const STATUS_URL = './status.json';
 
   const ROLES = {
-    freetype:       'Font rendering',
-    libpng:         'PNG codec',
-    lcms2:          'Color management',
-    ghostscript:    'PostScript / PDF',
-    'libjpeg-turbo':'JPEG codec',
-    libtiff:        'TIFF codec',
+    freetype:        'Font rendering',
+    libpng:          'PNG codec',
+    lcms2:           'Color management',
+    ghostscript:     'PostScript / PDF',
+    'libjpeg-turbo': 'JPEG codec',
+    libtiff:         'TIFF codec',
   };
 
-  // Which editors bundle each library (PS = Photoshop)
   const EDITORS = {
     freetype:        ['PS', 'GIMP', 'Krita'],
     libpng:          ['GIMP', 'Krita'],
@@ -257,6 +315,44 @@
     'libjpeg-turbo': ['GIMP', 'Krita'],
     libtiff:         ['GIMP', 'Krita'],
   };
+
+  const EDITOR_CLASS = { PS: 'ps', GIMP: 'gimp', Krita: 'krita' };
+  const EDITOR_LABEL = { PS: 'Photoshop', GIMP: 'GIMP', Krita: 'Krita' };
+
+  let liveData = null;
+  let playgroundData = null;
+  let isPlaygroundMode = false;
+
+  // ---------------------------------------------------------------------------
+  // Tab management
+  // ---------------------------------------------------------------------------
+
+  function showTab(tab) {
+    document.getElementById('tab-dashboard').style.display  = tab === 'dashboard'  ? '' : 'none';
+    document.getElementById('tab-playground').style.display = tab === 'playground' ? '' : 'none';
+    document.getElementById('btn-dashboard').classList.toggle('active',  tab === 'dashboard');
+    document.getElementById('btn-playground').classList.toggle('active', tab === 'playground');
+    if (tab === 'playground' && liveData && !playgroundData) {
+      initPlayground(liveData);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Risk computation — mirrors the Python fixed-rule logic exactly
+  // ---------------------------------------------------------------------------
+
+  function computeRiskJS(scorecard, tier, cves, hasFunding) {
+    const hasCves      = cves.length > 0;
+    const highBusRisk  = tier !== null && tier <= 2;
+    const lowScorecard = scorecard !== null && scorecard < 5.0;
+    if (hasCves && highBusRisk)                         return 'high';
+    if (hasCves || (highBusRisk && !hasFunding) || lowScorecard) return 'medium';
+    return 'low';
+  }
+
+  // ---------------------------------------------------------------------------
+  // Dashboard rendering
+  // ---------------------------------------------------------------------------
 
   function scoreColour(s) {
     if (s === null) return '#ccc';
@@ -267,21 +363,14 @@
 
   function busDots(tier) {
     if (tier === null) return '<span style="color:var(--muted)">—</span>';
-    // tier 1 = most dangerous (1 red dot), tier 4 = safest (4 blue dots)
     const danger = tier <= 2;
-    const filled = 5 - tier;  // tier 1 → 4 filled, tier 4 → 1 filled
+    const filled = 5 - tier;
     const cls = danger ? 'danger' : 'filled';
-    return `<div class="bus-dots" title="Bus factor tier ${tier} — ${busTierLabel(tier)}">
+    const labels = ['', 'Single contributor', '2 contributors', '3–5 contributors', '5+ contributors'];
+    return `<div class="bus-dots" title="Tier ${tier} — ${labels[tier]}">
       ${Array.from({length:4}, (_,i) => `<div class="dot ${i < filled ? cls : ''}"></div>`).join('')}
-    </div><div style="font-size:0.72rem;color:var(--muted);margin-top:3px">${busTierLabel(tier)}</div>`;
+    </div><div style="font-size:0.72rem;color:var(--muted);margin-top:3px">${labels[tier]}</div>`;
   }
-
-  function busTierLabel(tier) {
-    return ['', 'Single contributor', '2 contributors', '3–5 contributors', '5+ contributors'][tier] || '—';
-  }
-
-  const EDITOR_CLASS = { PS: 'ps', GIMP: 'gimp', Krita: 'krita' };
-  const EDITOR_LABEL = { PS: 'Photoshop', GIMP: 'GIMP', Krita: 'Krita' };
 
   function renderEditorPills(key) {
     return (EDITORS[key] || []).map(e =>
@@ -297,16 +386,14 @@
   }
 
   function render(data) {
-    const libs = data.libraries || {};
+    const libs      = data.libraries || {};
     const kritaKeys = data.krita_libs || [];
     const gimpKeys  = data.gimp_libs  || [];
 
-    // Summary counts
     const high   = Object.values(libs).filter(l => l.risk === 'high').length;
     const medium = Object.values(libs).filter(l => l.risk === 'medium').length;
     const low    = Object.values(libs).filter(l => l.risk === 'low').length;
 
-    // Editor banners
     const krita = editorBannerStatus(libs, kritaKeys);
     const gimp  = editorBannerStatus(libs, gimpKeys);
 
@@ -316,13 +403,12 @@
       return `${editor} bundles libraries at risk: <strong>${names}</strong>`;
     }
 
-    // Table rows
     const rows = Object.entries(libs).map(([key, info]) => {
-      const risk = info.risk || 'unknown';
-      const score = info.scorecard;
+      const risk     = info.risk || 'unknown';
+      const score    = info.scorecard;
       const scorePct = score !== null ? Math.round((score / 10) * 100) : 0;
-      const cves = info.open_cves || [];
-      const funding = info.funding_url;
+      const cves     = info.open_cves || [];
+      const funding  = info.funding_url;
 
       return `<tr>
         <td>
@@ -361,7 +447,6 @@
         <div class="card medium"><div class="number">${medium}</div><div class="label">Medium risk</div></div>
         <div class="card low"><div class="number">${low}</div><div class="label">Low risk</div></div>
       </div>
-
       <div class="banners">
         <div class="banner alert-${krita.maxRisk}">
           <span class="editor-name">Krita</span>
@@ -372,7 +457,6 @@
           <span>${bannerText('GIMP', gimp)}</span>
         </div>
       </div>
-
       <div class="table-wrap">
         <table>
           <thead>
@@ -391,18 +475,220 @@
       </div>`;
   }
 
+  // ---------------------------------------------------------------------------
+  // Playground
+  // ---------------------------------------------------------------------------
+
+  function initPlayground(data) {
+    // Deep copy so edits don't touch liveData
+    playgroundData = JSON.parse(JSON.stringify(data));
+    renderPlayground();
+  }
+
+  function renderPlayground() {
+    const grid = document.getElementById('pg-grid');
+    const libs = playgroundData.libraries || {};
+    grid.innerHTML = Object.entries(libs).map(([key, info]) => buildCard(key, info)).join('');
+  }
+
+  function buildCard(key, info) {
+    const score    = info.scorecard;
+    const tier     = info.bus_factor_tier;
+    const cves     = info.open_cves || [];
+    const funding  = !!info.funding_url;
+    const risk     = info.risk || 'unknown';
+
+    const scoreVal  = score !== null ? score : 5.0;
+    const scoreNA   = score === null;
+
+    const tierLabels = {1: 'Tier 1 — Very High', 2: 'Tier 2 — High', 3: 'Tier 3 — Medium', 4: 'Tier 4 — Low'};
+    const tierBtns = [1,2,3,4].map(t =>
+      `<button class="tier-btn${tier===t?' active'+(t<=2?' danger':''):''}${t<=2?' danger':''}"
+               onclick="setTier('${key}',${t})">${tierLabels[t]}</button>`
+    ).join('') + `<button class="tier-btn na${tier===null?' active':''}" onclick="setTier('${key}',null)">N/A</button>`;
+
+    const cveTags = cves.map(c =>
+      `<span class="cve-tag-pg">${c}<button onclick="removeCve('${key}','${c}')" title="Remove">×</button></span>`
+    ).join('');
+
+    return `
+      <div class="pg-card" id="pgcard-${key}">
+        <div class="pg-card-header">
+          <div>
+            <h3>${info.name}</h3>
+            <div class="lib-role">${ROLES[key] || ''}</div>
+          </div>
+          <span class="badge badge-${risk}" id="pg-risk-${key}">${risk.toUpperCase()}</span>
+        </div>
+
+        <div class="pg-field">
+          <label class="field-label">Scorecard (0 – 10)</label>
+          <div class="slider-row">
+            <input type="range" min="0" max="10" step="0.1"
+                   value="${scoreVal}"
+                   ${scoreNA ? 'disabled' : ''}
+                   id="pg-score-${key}"
+                   oninput="onScoreInput('${key}')">
+            <span class="slider-val" id="pg-score-val-${key}">${scoreNA ? '—' : scoreVal.toFixed(1)}</span>
+          </div>
+          <label class="na-check" style="margin-top:5px">
+            <input type="checkbox" ${scoreNA ? 'checked' : ''} onchange="toggleScoreNA('${key}',this.checked)">
+            Mark as unavailable (N/A)
+          </label>
+        </div>
+
+        <div class="pg-field">
+          <label class="field-label">Bus Factor Tier</label>
+          <div class="tier-row" id="pg-tier-${key}">${tierBtns}</div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-top:4px">
+            Tier 1 = one person holds >50% of commits &nbsp;·&nbsp; Tier 4 = 5+ people needed to reach 50%
+          </div>
+        </div>
+
+        <div class="pg-field">
+          <label class="field-label">Open CVEs</label>
+          <div class="cve-tag-row" id="pg-cves-${key}">${cveTags}</div>
+          <div class="cve-input-row">
+            <input type="text" id="pg-cve-input-${key}" placeholder="CVE-YYYY-XXXXX"
+                   onkeydown="if(event.key==='Enter')addCve('${key}')">
+            <button class="cve-add-btn" onclick="addCve('${key}')">Add</button>
+          </div>
+        </div>
+
+        <div class="pg-field">
+          <label class="field-label">Funding Page</label>
+          <div class="toggle-row">
+            <label class="toggle-switch">
+              <input type="checkbox" ${funding ? 'checked' : ''} onchange="toggleFunding('${key}',this.checked)">
+              <span class="toggle-track"></span>
+            </label>
+            <span class="toggle-label" id="pg-fund-label-${key}">${funding ? 'Has active funding page' : 'No funding page found'}</span>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // -- Playground input handlers --
+
+  function onScoreInput(key) {
+    const slider = document.getElementById(`pg-score-${key}`);
+    const val = parseFloat(slider.value);
+    document.getElementById(`pg-score-val-${key}`).textContent = val.toFixed(1);
+    playgroundData.libraries[key].scorecard = val;
+    recomputeRisk(key);
+  }
+
+  function toggleScoreNA(key, isNA) {
+    const slider = document.getElementById(`pg-score-${key}`);
+    const valEl  = document.getElementById(`pg-score-val-${key}`);
+    slider.disabled = isNA;
+    if (isNA) {
+      playgroundData.libraries[key].scorecard = null;
+      valEl.textContent = '—';
+    } else {
+      const val = parseFloat(slider.value);
+      playgroundData.libraries[key].scorecard = val;
+      valEl.textContent = val.toFixed(1);
+    }
+    recomputeRisk(key);
+  }
+
+  function setTier(key, tier) {
+    playgroundData.libraries[key].bus_factor_tier = tier;
+    // Re-render just the tier buttons
+    const tierLabels = {1: 'Tier 1 — Very High', 2: 'Tier 2 — High', 3: 'Tier 3 — Medium', 4: 'Tier 4 — Low'};
+    document.getElementById(`pg-tier-${key}`).innerHTML =
+      [1,2,3,4].map(t =>
+        `<button class="tier-btn${tier===t?' active'+(t<=2?' danger':''):''}${t<=2?' danger':''}"
+                 onclick="setTier('${key}',${t})">${tierLabels[t]}</button>`
+      ).join('') + `<button class="tier-btn na${tier===null?' active':''}" onclick="setTier('${key}',null)">N/A</button>`;
+    recomputeRisk(key);
+  }
+
+  function addCve(key) {
+    const input = document.getElementById(`pg-cve-input-${key}`);
+    const raw   = input.value.trim().toUpperCase();
+    if (!raw) return;
+    const cve = raw.startsWith('CVE-') ? raw : 'CVE-' + raw;
+    const lib = playgroundData.libraries[key];
+    if (!lib.open_cves.includes(cve)) {
+      lib.open_cves.push(cve);
+      refreshCveTags(key);
+      recomputeRisk(key);
+    }
+    input.value = '';
+    input.focus();
+  }
+
+  function removeCve(key, cve) {
+    const lib = playgroundData.libraries[key];
+    lib.open_cves = lib.open_cves.filter(c => c !== cve);
+    refreshCveTags(key);
+    recomputeRisk(key);
+  }
+
+  function refreshCveTags(key) {
+    const cves = playgroundData.libraries[key].open_cves;
+    document.getElementById(`pg-cves-${key}`).innerHTML = cves.map(c =>
+      `<span class="cve-tag-pg">${c}<button onclick="removeCve('${key}','${c}')" title="Remove">×</button></span>`
+    ).join('');
+  }
+
+  function toggleFunding(key, hasFunding) {
+    playgroundData.libraries[key].funding_url = hasFunding ? 'https://example.com/fund' : null;
+    document.getElementById(`pg-fund-label-${key}`).textContent =
+      hasFunding ? 'Has active funding page' : 'No funding page found';
+    recomputeRisk(key);
+  }
+
+  function recomputeRisk(key) {
+    const lib    = playgroundData.libraries[key];
+    const risk   = computeRiskJS(lib.scorecard, lib.bus_factor_tier, lib.open_cves, !!lib.funding_url);
+    lib.risk = risk;
+    const badge  = document.getElementById(`pg-risk-${key}`);
+    badge.className = `badge badge-${risk}`;
+    badge.textContent = risk.toUpperCase();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Apply / Reset
+  // ---------------------------------------------------------------------------
+
+  function applyToDashboard() {
+    if (!playgroundData) return;
+    isPlaygroundMode = true;
+    document.getElementById('demo-banner').style.display = 'flex';
+    showTab('dashboard');
+    render(playgroundData);
+  }
+
+  function resetToLive() {
+    isPlaygroundMode = false;
+    playgroundData   = null;
+    document.getElementById('demo-banner').style.display = 'none';
+    if (liveData) render(liveData);
+    if (document.getElementById('tab-playground').style.display !== 'none') {
+      // Re-init playground from live data
+      initPlayground(liveData);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Fetch live data
+  // ---------------------------------------------------------------------------
+
   async function load() {
     try {
       const resp = await fetch(STATUS_URL);
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const data = await resp.json();
+      liveData = await resp.json();
 
-      const ts = data.last_updated
-        ? new Date(data.last_updated).toLocaleString(undefined, {dateStyle:'medium', timeStyle:'short'})
+      const ts = liveData.last_updated
+        ? new Date(liveData.last_updated).toLocaleString(undefined, {dateStyle:'medium', timeStyle:'short'})
         : 'unknown';
       document.getElementById('updated').textContent = `Last updated: ${ts}`;
 
-      render(data);
+      render(liveData);
     } catch (e) {
       document.getElementById('app').innerHTML =
         `<div class="state-msg">Could not load library data.<br><small>${e.message}</small></div>`;

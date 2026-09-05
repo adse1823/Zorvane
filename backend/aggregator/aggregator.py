@@ -26,7 +26,13 @@ LIBRARIES = {
         "platform": "github.com",
         "org": "freetype",
         "repo": "freetype",
-        "osv_packages": [{"name": "freetype2", "ecosystem": "OSS-Fuzz"}],
+        # Primary dev is on freedesktop.org GitLab — Scorecard may return null for the GitHub mirror.
+        "osv_packages": [
+            {"name": "freetype2", "ecosystem": "OSS-Fuzz"},
+            {"name": "freetype",  "ecosystem": "OSS-Fuzz"},
+            {"name": "freetype",  "ecosystem": "Debian"},
+            {"name": "freetype",  "ecosystem": "Alpine"},
+        ],
         "oc_slug": "freetype",
     },
     "libpng": {
@@ -34,7 +40,11 @@ LIBRARIES = {
         "platform": "github.com",
         "org": "pnggroup",
         "repo": "libpng",
-        "osv_packages": [{"name": "libpng", "ecosystem": "OSS-Fuzz"}],
+        "osv_packages": [
+            {"name": "libpng",  "ecosystem": "OSS-Fuzz"},
+            {"name": "libpng",  "ecosystem": "Debian"},
+            {"name": "libpng",  "ecosystem": "Alpine"},
+        ],
         "oc_slug": None,
     },
     "lcms2": {
@@ -45,6 +55,7 @@ LIBRARIES = {
         "osv_packages": [
             {"name": "lcms2", "ecosystem": "OSS-Fuzz"},
             {"name": "lcms2", "ecosystem": "Debian"},
+            {"name": "lcms2", "ecosystem": "Alpine"},
         ],
         "oc_slug": None,
     },
@@ -53,7 +64,12 @@ LIBRARIES = {
         "platform": "github.com",
         "org": "ArtifexSoftware",
         "repo": "ghostpdl",
-        "osv_packages": [{"name": "ghostscript", "ecosystem": "OSS-Fuzz"}],
+        # Primary dev is on git.ghostscript.com — Scorecard may return null for the GitHub mirror.
+        "osv_packages": [
+            {"name": "ghostscript", "ecosystem": "OSS-Fuzz"},
+            {"name": "ghostscript", "ecosystem": "Debian"},
+            {"name": "ghostscript", "ecosystem": "Alpine"},
+        ],
         "oc_slug": None,
     },
     "libjpeg-turbo": {
@@ -61,7 +77,11 @@ LIBRARIES = {
         "platform": "github.com",
         "org": "libjpeg-turbo",
         "repo": "libjpeg-turbo",
-        "osv_packages": [{"name": "libjpeg-turbo", "ecosystem": "OSS-Fuzz"}],
+        "osv_packages": [
+            {"name": "libjpeg-turbo", "ecosystem": "OSS-Fuzz"},
+            {"name": "libjpeg-turbo", "ecosystem": "Debian"},
+            {"name": "libjpeg-turbo", "ecosystem": "Alpine"},
+        ],
         "oc_slug": "libjpeg-turbo",
     },
     # libtiff lives on GitLab — bus-factor and Scorecard use gitlab.com paths
@@ -70,7 +90,11 @@ LIBRARIES = {
         "platform": "gitlab.com",
         "org": "libtiff",
         "repo": "libtiff",
-        "osv_packages": [{"name": "tiff", "ecosystem": "OSS-Fuzz"}],
+        "osv_packages": [
+            {"name": "tiff",   "ecosystem": "OSS-Fuzz"},
+            {"name": "tiff",   "ecosystem": "Debian"},
+            {"name": "libtiff","ecosystem": "Alpine"},
+        ],
         "oc_slug": None,
     },
 }
@@ -271,10 +295,17 @@ def fetch_funding_github_sponsors(org: str) -> Optional[str]:
 def fetch_funding_opencollective(slug: Optional[str]) -> Optional[str]:
     if not slug:
         return None
+    query = "query($slug:String!){collective(slug:$slug){id}}"
     try:
-        r = requests.get(f"https://opencollective.com/{slug}.json", timeout=TIMEOUT)
-        if r.status_code == 200 and r.json().get("id"):
-            return f"https://opencollective.com/{slug}"
+        r = requests.post(
+            "https://api.opencollective.com/graphql/v2",
+            json={"query": query, "variables": {"slug": slug}},
+            timeout=TIMEOUT,
+        )
+        if r.status_code == 200:
+            collective = (r.json().get("data") or {}).get("collective")
+            if collective and collective.get("id"):
+                return f"https://opencollective.com/{slug}"
     except Exception as e:
         print(f"  [funding-oc] {slug}: {e}", file=sys.stderr)
     return None

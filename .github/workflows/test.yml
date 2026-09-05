@@ -21,5 +21,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r backend/aggregator/requirements.txt pytest
 
-      - name: Run tests
+      - name: Run aggregator tests
         run: pytest backend/aggregator/tests/ -v
+
+      - name: Run GIMP plugin tests
+        run: pytest plugins/gimp/tests/ -v
