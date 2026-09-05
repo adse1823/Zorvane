@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zorvane — Open Source Library Monitor</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --high:    #c0392b;
+      --medium:  #d68910;
+      --low:     #1e8449;
+      --unknown: #717d7e;
+      --bg:      #f0f2f5;
+      --surface: #ffffff;
+      --header:  #0d1117;
+      --accent:  #2188ff;
+      --text:    #1c1c1e;
+      --muted:   #6e7781;
+      --border:  #d0d7de;
+      --radius:  8px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ─────────────────────────────────────────────────── */
+    header {
+      background: var(--header);
+      color: #fff;
+      padding: 40px 32px 36px;
+    }
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    header h1 span { color: #58a6ff; }
+    header p {
+      margin-top: 6px;
+      font-size: 0.95rem;
+      color: #8b949e;
+      max-width: 560px;
+    }
+    .updated {
+      margin-top: 12px;
+      font-size: 0.8rem;
+      color: #484f58;
+    }
+
+    /* ── Layout ──────────────────────────────────────────────────── */
+    main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
+
+    /* ── Summary cards ───────────────────────────────────────────── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      text-align: center;
+    }
+    .card .number {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .card .label {
+      margin-top: 4px;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+    }
+    .card.high   .number { color: var(--high); }
+    .card.medium .number { color: var(--medium); }
+    .card.low    .number { color: var(--low); }
+
+    /* ── Editor alert banners ────────────────────────────────────── */
+    .banners { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+    .banner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .banner.alert-high   { border-left-color: var(--high); }
+    .banner.alert-medium { border-left-color: var(--medium); }
+    .banner.alert-ok     { border-left-color: var(--low); }
+    .banner .editor-name { font-weight: 600; min-width: 80px; }
+    .banner .detail      { color: var(--muted); font-size: 0.85rem; }
+
+    /* ── Table ───────────────────────────────────────────────────── */
+    .table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    thead th {
+      background: #f6f8fa;
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f6f8fa; }
+    td { padding: 12px 14px; vertical-align: middle; }
+
+    .lib-name { font-weight: 600; font-size: 0.92rem; }
+    .lib-role { color: var(--muted); font-size: 0.8rem; margin-top: 1px; }
+
+    /* ── Risk badge ──────────────────────────────────────────────── */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      color: #fff;
+    }
+    .badge-high    { background: var(--high); }
+    .badge-medium  { background: var(--medium); }
+    .badge-low     { background: var(--low); }
+    .badge-unknown { background: var(--unknown); }
+
+    /* ── Scorecard bar ───────────────────────────────────────────── */
+    .score-wrap { display: flex; align-items: center; gap: 8px; }
+    .score-bar  {
+      flex: 1; height: 6px; border-radius: 3px;
+      background: var(--border); max-width: 80px; overflow: hidden;
+    }
+    .score-fill { height: 100%; border-radius: 3px; }
+    .score-val  { font-size: 0.82rem; font-weight: 600; min-width: 28px; }
+
+    /* ── Bus factor ──────────────────────────────────────────────── */
+    .bus-dots { display: flex; gap: 4px; }
+    .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--border);
+    }
+    .dot.filled { background: var(--accent); }
+    .dot.danger { background: var(--high); }
+
+    /* ── CVEs ────────────────────────────────────────────────────── */
+    .cve-list { display: flex; flex-wrap: wrap; gap: 4px; }
+    .cve-tag {
+      background: #fff0f0;
+      color: var(--high);
+      border: 1px solid #f5c6cb;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      padding: 1px 6px;
+      font-family: "SFMono-Regular", Consolas, monospace;
+    }
+
+    /* ── Editor pills ────────────────────────────────────────────── */
+    .editor-pills { display: flex; flex-wrap: wrap; gap: 4px; }
+    .editor-pill {
+      font-size: 0.7rem;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 600;
+      background: #ddf4ff;
+      color: #0969da;
+      border: 1px solid #b6e3ff;
+    }
+    .editor-pill.ps { background: #ffd7f5; color: #8250df; border-color: #d8b4fe; }
+
+    /* ── Links ───────────────────────────────────────────────────── */
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Loading / error ─────────────────────────────────────────── */
+    .state-msg {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Zorv<span>ane</span></h1>
+  <p>Monitoring the open-source libraries shared by Photoshop, GIMP, and Krita — for security risk, maintainer fragility, and funding gaps.</p>
+  <div class="updated" id="updated">Loading data…</div>
+</header>
+
+<main>
+  <div id="app"><div class="state-msg">Fetching library data…</div></div>
+</main>
+
+<footer>
+  Data sources:
+  <a href="https://scorecard.dev" target="_blank">OpenSSF Scorecard</a> ·
+  <a href="https://osv.dev" target="_blank">OSV.dev</a> ·
+  <a href="https://github.com" target="_blank">GitHub API</a> ·
+  <a href="https://opencollective.com" target="_blank">Open Collective</a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/adse1823/Zorvane" target="_blank">View source</a>
+</footer>
+
+<script>
+  const STATUS_URL = './status.json';
+
+  const ROLES = {
+    freetype:       'Font rendering',
+    libpng:         'PNG codec',
+    lcms2:          'Color management',
+    ghostscript:    'PostScript / PDF',
+    'libjpeg-turbo':'JPEG codec',
+    libtiff:        'TIFF codec',
+  };
+
+  // Which editors bundle each library (PS = Photoshop)
+  const EDITORS = {
+    freetype:        ['PS', 'GIMP', 'Krita'],
+    libpng:          ['GIMP', 'Krita'],
+    lcms2:           ['GIMP', 'Krita'],
+    ghostscript:     ['GIMP'],
+    'libjpeg-turbo': ['GIMP', 'Krita'],
+    libtiff:         ['GIMP', 'Krita'],
+  };
+
+  function scoreColour(s) {
+    if (s === null) return '#ccc';
+    if (s < 4)  return 'var(--high)';
+    if (s < 6)  return 'var(--medium)';
+    return 'var(--low)';
+  }
+
+  function busDots(tier) {
+    if (tier === null) return '<span style="color:var(--muted)">—</span>';
+    // tier 1 = most dangerous (1 red dot), tier 4 = safest (4 blue dots)
+    const danger = tier <= 2;
+    const filled = 5 - tier;  // tier 1 → 4 filled, tier 4 → 1 filled
+    const cls = danger ? 'danger' : 'filled';
+    return `<div class="bus-dots" title="Bus factor tier ${tier} — ${busTierLabel(tier)}">
+      ${Array.from({length:4}, (_,i) => `<div class="dot ${i < filled ? cls : ''}"></div>`).join('')}
+    </div><div style="font-size:0.72rem;color:var(--muted);margin-top:3px">${busTierLabel(tier)}</div>`;
+  }
+
+  function busTierLabel(tier) {
+    return ['', 'Single contributor', '2 contributors', '3–5 contributors', '5+ contributors'][tier] || '—';
+  }
+
+  function renderEditorPills(key) {
+    return (EDITORS[key] || []).map(e =>
+      `<span class="editor-pill${e==='PS'?' ps':''}">${e==='PS'?'Photoshop':e}</span>`
+    ).join('');
+  }
+
+  function editorBannerStatus(libs, keys) {
+    const flagged = keys.filter(k => libs[k] && ['medium','high'].includes(libs[k].risk));
+    const maxRisk = flagged.some(k => libs[k]?.risk === 'high') ? 'high'
+                  : flagged.length > 0 ? 'medium' : 'ok';
+    return { flagged, maxRisk };
+  }
+
+  function render(data) {
+    const libs = data.libraries || {};
+    const kritaKeys = data.krita_libs || [];
+    const gimpKeys  = data.gimp_libs  || [];
+
+    // Summary counts
+    const high   = Object.values(libs).filter(l => l.risk === 'high').length;
+    const medium = Object.values(libs).filter(l => l.risk === 'medium').length;
+    const low    = Object.values(libs).filter(l => l.risk === 'low').length;
+
+    // Editor banners
+    const krita = editorBannerStatus(libs, kritaKeys);
+    const gimp  = editorBannerStatus(libs, gimpKeys);
+
+    function bannerText(editor, {flagged, maxRisk}) {
+      if (maxRisk === 'ok') return `${editor}: all bundled libraries healthy.`;
+      const names = flagged.map(k => libs[k]?.name || k).join(', ');
+      return `${editor} bundles libraries at risk: <strong>${names}</strong>`;
+    }
+
+    // Table rows
+    const rows = Object.entries(libs).map(([key, info]) => {
+      const risk = info.risk || 'unknown';
+      const score = info.scorecard;
+      const scorePct = score !== null ? Math.round((score / 10) * 100) : 0;
+      const cves = info.open_cves || [];
+      const funding = info.funding_url;
+
+      return `<tr>
+        <td>
+          <div class="lib-name">${info.name}</div>
+          <div class="lib-role">${ROLES[key] || ''}</div>
+        </td>
+        <td><span class="badge badge-${risk}">${risk}</span></td>
+        <td>
+          ${score !== null ? `
+            <div class="score-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:${scorePct}%;background:${scoreColour(score)}"></div></div>
+              <span class="score-val">${score.toFixed(1)}</span>
+            </div>` : '<span style="color:var(--muted)">—</span>'}
+        </td>
+        <td>${busDots(info.bus_factor_tier)}</td>
+        <td>
+          ${cves.length
+            ? `<div class="cve-list">${cves.map(c =>
+                `<span class="cve-tag"><a href="https://osv.dev/vulnerability/${c}" target="_blank">${c}</a></span>`
+              ).join('')}</div>`
+            : '<span style="color:var(--low)">None</span>'}
+        </td>
+        <td>
+          ${funding
+            ? `<a href="${funding}" target="_blank">View →</a>`
+            : '<span style="color:var(--muted)">None found</span>'}
+        </td>
+        <td><div class="editor-pills">${renderEditorPills(key)}</div></td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('app').innerHTML = `
+      <div class="cards">
+        <div class="card"><div class="number">${Object.keys(libs).length}</div><div class="label">Libraries tracked</div></div>
+        <div class="card high"><div class="number">${high}</div><div class="label">High risk</div></div>
+        <div class="card medium"><div class="number">${medium}</div><div class="label">Medium risk</div></div>
+        <div class="card low"><div class="number">${low}</div><div class="label">Low risk</div></div>
+      </div>
+
+      <div class="banners">
+        <div class="banner alert-${krita.maxRisk}">
+          <span class="editor-name">Krita</span>
+          <span>${bannerText('Krita', krita)}</span>
+        </div>
+        <div class="banner alert-${gimp.maxRisk}">
+          <span class="editor-name">GIMP</span>
+          <span>${bannerText('GIMP', gimp)}</span>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Library</th>
+              <th>Risk</th>
+              <th>Scorecard <span style="font-weight:400">(0–10)</span></th>
+              <th>Bus Factor</th>
+              <th>Open CVEs</th>
+              <th>Funding</th>
+              <th>Used by</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  }
+
+  async function load() {
+    try {
+      const resp = await fetch(STATUS_URL);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json();
+
+      const ts = data.last_updated
+        ? new Date(data.last_updated).toLocaleString(undefined, {dateStyle:'medium', timeStyle:'short'})
+        : 'unknown';
+      document.getElementById('updated').textContent = `Last updated: ${ts}`;
+
+      render(data);
+    } catch (e) {
+      document.getElementById('app').innerHTML =
+        `<div class="state-msg">Could not load library data.<br><small>${e.message}</small></div>`;
+      document.getElementById('updated').textContent = '';
+    }
+  }
+
+  load();
+</script>
+</body>
+</html>

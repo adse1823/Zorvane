@@ -6,11 +6,15 @@ on:
   workflow_dispatch:        # allow manual runs from the Actions tab
 
 permissions:
-  contents: write           # needed to commit status.json back to the repo
+  contents: write           # commit status.json back to the repo
+  pages: write              # deploy to GitHub Pages
+  id-token: write           # required by actions/deploy-pages
 
 jobs:
   aggregate:
     runs-on: ubuntu-latest
+    outputs:
+      artifact_id: ${{ steps.upload.outputs.artifact_id }}
     steps:
       - uses: actions/checkout@v4
 
@@ -35,5 +39,24 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add backend/status.json
           git diff --staged --quiet && echo "No changes to commit" || \
-            git commit -m "chore: update status.json [skip ci]"
-          git push
+            (git commit -m "chore: update status.json [skip ci]" && git push)
+
+      - name: Copy status.json into dashboard for Pages
+        run: cp backend/status.json dashboard/status.json
+
+      - name: Upload Pages artifact
+        id: upload
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dashboard/
+
+  deploy:
+    needs: aggregate
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
