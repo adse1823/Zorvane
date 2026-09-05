@@ -1,6 +1,73 @@
 {
-  "last_updated": null,
-  "krita_libs": ["freetype", "lcms2", "libjpeg-turbo", "libpng"],
-  "gimp_libs": ["freetype", "ghostscript", "lcms2", "libjpeg-turbo", "libpng", "libtiff"],
-  "libraries": {}
+  "last_updated": "2026-09-05T21:48:26Z",
+  "krita_libs": [
+    "freetype",
+    "lcms2",
+    "libjpeg-turbo",
+    "libpng"
+  ],
+  "gimp_libs": [
+    "freetype",
+    "ghostscript",
+    "lcms2",
+    "libjpeg-turbo",
+    "libpng",
+    "libtiff"
+  ],
+  "libraries": {
+    "freetype": {
+      "name": "FreeType",
+      "scorecard": null,
+      "criticality": null,
+      "bus_factor_tier": 2,
+      "open_cves": [],
+      "funding_url": null,
+      "risk": "medium"
+    },
+    "libpng": {
+      "name": "libpng",
+      "scorecard": null,
+      "criticality": null,
+      "bus_factor_tier": 1,
+      "open_cves": [],
+      "funding_url": null,
+      "risk": "medium"
+    },
+    "lcms2": {
+      "name": "Little CMS",
+      "scorecard": 6.8,
+      "criticality": null,
+      "bus_factor_tier": 1,
+      "open_cves": [],
+      "funding_url": null,
+      "risk": "medium"
+    },
+    "ghostscript": {
+      "name": "Ghostscript",
+      "scorecard": null,
+      "criticality": null,
+      "bus_factor_tier": 2,
+      "open_cves": [],
+      "funding_url": null,
+      "risk": "medium"
+    },
+    "libjpeg-turbo": {
+      "name": "libjpeg-turbo",
+      "scorecard": 5.3,
+      "criticality": null,
+      "bus_factor_tier": 1,
+      "open_cves": [],
+      "funding_url": null,
+      "risk": "medium"
+    },
+    "libtiff": {
+      "name": "libtiff",
+      "scorecard": 6.1,
+      "criticality": null,
+      "bus_factor_tier": 2,
+      "open_cves": [],
+      "funding_url": null,
+      "risk": "medium"
+    }
+  }
 }
