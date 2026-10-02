@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-10-01T12:11:12Z",
+  "last_updated": "2026-10-02T11:41:18Z",
   "krita_libs": [
     "freetype",
     "lcms2",
@@ -35,7 +35,7 @@
     },
     "lcms2": {
       "name": "Little CMS",
-      "scorecard": 6.8,
+      "scorecard": 6.7,
       "criticality": null,
       "bus_factor_tier": 1,
       "open_cves": [],
