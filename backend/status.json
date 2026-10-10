@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-10-09T12:22:55Z",
+  "last_updated": "2026-10-10T11:41:40Z",
   "krita_libs": [
     "freetype",
     "lcms2",
@@ -64,10 +64,10 @@
       "name": "libtiff",
       "scorecard": 6.1,
       "criticality": null,
-      "bus_factor_tier": 2,
+      "bus_factor_tier": null,
       "open_cves": [],
       "funding_url": null,
-      "risk": "medium"
+      "risk": "low"
     }
   }
 }
